@@ -1,6 +1,8 @@
 const express = require('express');
 var cors = require('cors');
 
+const { dbConnection } = require('../database/config')
+
 const app = express();
 
 class Server{
@@ -10,12 +12,19 @@ class Server{
         this.port = process.env.PORT;
         this.usuariosPath = '/api/usuarios';
 
+        //Conectar a la base da datos
+        this.conectarDb();
+
         //Middlewares -> funciónes que añaden funcionalidades a nuestro RestServer, que se
         //ejecutan cuando levantamos el servidor
         this.middlewares();
 
         //Rutas de mi aplicación
         this.routes();
+    }
+
+    async conectarDb(){
+        await dbConnection();
     }
 
     middlewares(){
