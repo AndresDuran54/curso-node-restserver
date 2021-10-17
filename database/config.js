@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dbConnection = async() => {
     try{
 
+        //Nos conectamos a nuestra BD Mongo
+        //process.env.MONGODB_CNN -> cadena de conexión
         await mongoose.connect(process.env.MONGODB_CNN, {
             useNewUrlParser: true,
             useUnifiedTopology: true,

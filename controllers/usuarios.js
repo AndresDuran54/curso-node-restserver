@@ -10,16 +10,17 @@ const usuariosGet = async (req = request, res = response) => {
 
     //const usuarios = await Usuario.find({ estado: true })
     //    .skip(Number(desde))
-    //    .limit(Number(limit));
+    //    .limit(Number(limit))
 
     //const total = await Usuario.countDocuments({ estado: true });
 
     //Promise.all([]) -> Ejecuta todas las promesas en diferentes hilos
     //haciendolo mucho màs ràpido
     //desestructuración en un arreglo
+    console.log("Holaaa");
     const [total, usuarios] = await Promise.all([
-        Usuario.countDocuments({ estado: true }),
-        Usuario.find({ estado: true })
+        Usuario.countDocuments(),
+        Usuario.find()
         .skip(Number(desde))
         .limit(Number(limit))
     ])
@@ -89,7 +90,9 @@ const usuariosPost = async (req, res = response) => {
     //round -> Número de rondas a usar, el valor predeterminado es 10 si se omite
     const salt =  bcryptjs.genSaltSync();
     //Genera sincrónicamente un hash para la cadena dada.
-    usuario.password = bcryptjs.hashSync(usuario.password, salt);
+    console.log(password);
+    usuario.password = bcryptjs.hashSync(password, salt);
+    console.log(usuario.password);
 
     /*
     Guarda este documento insertando un nuevo documento en la base de datos si document.isNew es true, 
