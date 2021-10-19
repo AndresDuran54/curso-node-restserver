@@ -1,12 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado</title>
+    <title>Google Sign-in</title>
 </head>
+
 <body>
-    <h1>Acceso denegada</h1>
+    <h1>Google Sign-in</h1>
+    <hr>
+
+    <!--
+        Opcional. El nombre de su función de devolución de llamada, que se ejecuta cuando el 
+        usuario envía una respuesta exitosa. El token g-recaptcha-response se pasa a su 
+        devolución de llamada.
+    -->
+    <div id="g_id_onload" data-client_id="610618389616-f5aestl4lal7hodr06tr6nn8snn8snnh.apps.googleusercontent.com"
+        data-login_uri="https://your.domain/your_login_endpoint" data-auto_prompt="false" data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+        data-shape="rectangular" data-logo_alignment="left">
+    </div>
+
+    <button id = "google_signout">
+        Sign Out
+    </button>
+
+    <script>
+        const button = document.getElementById("google_signout");
+        button.onclick = () => {
+            //console.log("Hola");
+            //console.log( google.accounts.id );
+            google.accounts.id.disableAutoSelect();
+            google.accounts.id.revoke( localStorage.getItem('email'), done => {
+                localStorage.clear();
+                location.reload();
+            });
+        }
+    </script>
+
+
+    <script>
+        function handleCredentialResponse(response) {
+
+            /*
+                response tiene forma =>
+                {
+                    clientId: '610618389616-f5aestl4lal7hodr06tr6nn8snn8snnh.apps.googleusercontent.com', 
+                    credential: 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImFkZDhjMGVlNjIzOTU0NG…sdfqqdC_m3hITXFbyYe8b72XwzRndrqcyedBzSrjeJhOrIYgQ', 
+                    select_by: 'btn'
+                }
+            */
+            
+            const body = {
+                id_token: response.credential
+            };
+            /*
+            Fecht nos va a aiudar a realizar peticiones HTTP
+            https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch
+            El uso de fetch() más simple toma un argumento (la ruta del recurso que quieres obtener)
+             y devuelve un objeto Promise conteniendo la respuesta, un objeto Response.
+            */
+            fetch('http://localhost:8080/api/auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                //El método JSON.stringify() convierte un objeto o valor de JavaScript en una cadena de texto JSON
+                body: JSON.stringify(body)
+            })
+            /*
+            .json() Recibe un flujo Response y lo lee hasta completarlo. 
+            Devuelve una promesa que resuelve como JSON el texto del Body enviado.
+            */
+            .then( resp => resp.json())
+            .then( resp => {
+                //console.log(resp);
+                localStorage.setItem('email', resp.usuario.correo);
+                location.reload();
+            })
+            .catch(console.warn);
+        }
+    </script>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>
+
 </html>
