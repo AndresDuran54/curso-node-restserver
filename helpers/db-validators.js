@@ -1,3 +1,5 @@
+const { Producto } = require('../models');
+const Categoria = require('../models/categoria');
 const Role = require('../models/role');
 const Usuario = require('../models/usuario');
 
@@ -31,9 +33,31 @@ const existeUsuarioPorId = async (id) => {
     }
 }
 
+const existeCategoriaPorId = async (id) => {
+
+    const existeCategoria = await Categoria.findById(id);
+
+    if(!existeCategoria){
+        //Crea un nuevo ValidationError y lo agrega a Result<ValidationError>
+        throw new Error(`El id no existe en la BD`);
+    }
+}
+
+const existeProductoPorId = async (id) => {
+
+    const existeProducto = await Producto.findById(id);
+
+    if(!existeProducto){
+        //Crea un nuevo ValidationError y lo agrega a Result<ValidationError>
+        throw new Error(`El id no existe en la BD`);
+    }
+}
+
 module.exports = {
     esRoleValido,
     correoExiste,
-    existeUsuarioPorId
+    existeUsuarioPorId,
+    existeCategoriaPorId,
+    existeProductoPorId
 }
 

@@ -10,12 +10,17 @@ class Server{
     constructor(){
         //Obtenemos una instacia de expres
         this.app = express();
+        
         //Obtenemos nuestro número de puerto
         this.port = process.env.PORT;
-        //Declaramos un path para el CRUD usuarios
-        this.usuariosPath = '/api/usuarios';
-        //Declaramos un path para la autorización
-        this.authPath = '/api/auth';
+
+        this.paths = {
+            auth: '/api/auth',
+            usuarios: '/api/usuarios',
+            categorias: '/api/categorias',
+            productos: '/api/productos',
+            buscar: '/api/buscar'
+        }
 
         //Conectar a la base da datos
         this.conectarDb();
@@ -47,8 +52,11 @@ class Server{
 
     routes(){
         //Declaramos los path con sus respectivas subrutas para cada tipo de petición
-        this.app.use(this.authPath, require('../routes/auth'));
-        this.app.use(this.usuariosPath, require('../routes/usuarios'));
+        this.app.use(this.paths.auth, require('../routes/auth'));
+        this.app.use(this.paths.usuarios, require('../routes/usuarios'));
+        this.app.use(this.paths.categorias, require('../routes/categorias'));
+        this.app.use(this.paths.productos, require('../routes/productos'));
+        this.app.use(this.paths.buscar, require('../routes/buscar'));
     }
 
     listen(){
