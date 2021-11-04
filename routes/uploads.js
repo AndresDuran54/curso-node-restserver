@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { cargarArchivo, actualizarImagen } = require('../controllers/uploads');
+const { cargarArchivo, actualizarImagen, mostrarImagen } = require('../controllers/uploads');
 const { coleccionesPermitidas } = require('../helpers');
 const { validarCampos, validarArchivoSubir } = require('../middlewares');
 
@@ -23,4 +23,12 @@ router.put(
     actualizarImagen
 );
 
+router.get(
+    '/:coleccion/:id',
+    [
+
+    ],
+    mostrarImagen
+);
+0
 module.exports = router;
