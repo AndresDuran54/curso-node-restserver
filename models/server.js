@@ -3,7 +3,8 @@ const express = require('express');
 var cors = require('cors');
 
 //Obtenemos la función de configuración de conexion a nuestra BD
-const { dbConnection } = require('../database/config')
+const { dbConnection } = require('../database/config');
+const fileUpload = require('express-fileupload');
 
 class Server{
 
@@ -48,6 +49,16 @@ class Server{
         //La informacion que viene hacia el backend va a estar en formato de tipo JSON
         //Parsea el body en formato JSON
         this.app.use(express.json());
+
+        //Fileupload - Cargar Archivos
+        this.app.use(
+            fileUpload({
+                useTempFiles: true,
+                tempFileDir: '/tmp/',
+                //Crear carpeta si es necesario
+                createParentPath: true
+            })
+        );
 
     }
 
